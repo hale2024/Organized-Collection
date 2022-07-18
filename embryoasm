@@ -118,8 +118,89 @@ add [rsp], rcx" | /challenge/embryoasm_level10
 flag=pwn.college{kD2qA1XYxOPeHc-TRzMyX_Caq0a.QXzAjMsADOzQzW}
 
         level 11
+asm -c amd64 "mov rsp, 0x404000
+mov al, [rsp]
+mov bx, [rsp]
+mov ecx, [rsp]
+mov rdx, [rsp]" | /challenge/embryoasm_level11
 
-        
+flag=pwn.college{sPTmfUgoNur-pgjK_wpR_yMOBc0.QX0AjMsADOzQzW}
 
+        level 12
+asm -c amd64 "mov rcx, 0xDEADBEEF00001337
+mov rdx, 0x000000C0FFEE0000
+mov [rdi], rcx
+mov [rsi], rdx" | /challenge/embryoasm_level12
 
+flag=pwn.college{kTZRhaNIs63HUY171G27zRBbeQ9.QX1AjMsADOzQzW}
+
+        level 13
+
+asm -c amd64 "mov rax, [rdi]
+mov rbx, [rdi+8]
+add rax, rbx
+mov [rsi], rax" | /challenge/embryoasm_level13
+
+        level 14
+//subtracting from the top of the stack
+asm -c amd64 "sub [rsp], rdi" | /challenge/embryoasm_level14
+
+flag=pwn.college{4aXkvLcH74c7UJLbSNTo8FKmVT8.QX3AjMsADOzQzW}
+
+        level 15
+asm -c amd64 "push rdi
+push rsi
+pop rdi
+pop rsi" | /challenge/embryoasm_level15
+
+flag=pwn.college{guoqFpMCDso0CCLez4QoCmTeN7A.QX4AjMsADOzQzW}
+
+        level 16
+//don't forget you can't directly do div 4, you need to assign 4 to a register value
+asm -c amd64 "mov rax, [rsp];
+add rax, [rsp+8]
+add rax, [rsp+16]
+add rax, [rsp+24]
+mov rbx, 4
+div rbx
+push rax" | /challenge/embryoasm_level16
+
+flag=pwn.college{UrhZADFwCRLG-ifRG9YHFci5Mle.QX5AjMsADOzQzW}
+
+        level 17
+jumped didn't understand how to do
+
+        level 18
+// x = rdi, y = rax
+// if [x] is 0x7f454c46 ....
+// dword ptr :- converts it into a 32 bit:http://www.c-jump.com/CIS77/ASM/Instructions/I77_0250_ptr_pointer.htm
+
+asm -c amd64 "cmp dword ptr [rdi], 0x7f454c46
+jne else_if
+jmp if
+if:
+    xor rax, rax
+    add eax, dword ptr [rdi+4]
+    add eax, dword ptr [rdi+8]
+    add eax, dword ptr [rdi+12]
+    jmp exit
+else_if:
+    cmp dword ptr [rdi], 0x00005A4D
+    jne else
+    mov eax, dword ptr [rdi+4]
+    sub eax, dword ptr [rdi+8]
+    sub eax, dword ptr [rdi+12]
+    jmp exit
+else:
+    mov rax, 1
+    mul dword ptr [rdi+4]
+    mul dword ptr [rdi+8]
+    mul dword ptr [rdi+12]
+    jmp exit
+exit:
+    nop" | /challenge/embryoasm_level18
+flag=pwn.college{wRDz_COxY1zBd7c0ksykHM18DDN.QXxEjMsADOzQzW}
+
+        level 19
  
+
