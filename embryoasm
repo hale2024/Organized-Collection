@@ -86,4 +86,40 @@ flag=pwn.college{gNaNQWgLQa0Kkte_G22woxwk8fv.QX4kTMsADOzQzW}
 
         level6-soln1
 
-      
+ -Didn't understand what happened
+Solution Code: https://github.com/reusedbottle/flags/blob/main/pwn.college/embryoasm/6.py
+
+        level7-soln1
+-Didn't understand what happened
+Solution Code: https://github.com/reusedbottle/flags/blob/main/pwn.college/embryoasm/7.py
+        
+        level 8
+asm -c amd64 "xor rax, rax
+or rax, rdi
+and rax, rsi" | /challenge/embryoasm_level8
+
+flag=pwn.college{4vcBB0g5hhnn-zO85Yiu96iAS7V.QXxAjMsADOzQzW}
+
+        level 9
+asm -c amd64 "xor rax, rax
+or rax, rdi
+and rax, 1
+xor rax, 1" | /challenge/embryoasm_level9
+Comment:rax is 1 if rdi is even, else 0. So we check if rdi is 0 or 1.
+
+        level 10
+ //you store the value in 0x404000 to rax. Then add 0x1337 to the original value. The value in the address 0x404000 is different from the value in rax.
+//you should use registers to add or store the address.
+asm -c amd64 "mov rsp, 0x404000
+mov rax, [rsp]
+mov rcx, 0x1337
+add [rsp], rcx" | /challenge/embryoasm_level10
+
+flag=pwn.college{kD2qA1XYxOPeHc-TRzMyX_Caq0a.QXzAjMsADOzQzW}
+
+        level 11
+
+        
+
+
+ 
