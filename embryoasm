@@ -1,6 +1,4 @@
- References:https://m.freebuf.com/articles/database/321326.html
-        -
-        level1-solution1
+       level1-solution1
 //First type ipython and type the below code. 
 
 from pwn import *
