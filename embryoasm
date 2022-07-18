@@ -1,4 +1,6 @@
         level1-solution1
+//First type ipython and type the below code. 
+
 from pwn import *
 
 # set some context
@@ -17,6 +19,71 @@ with process(f"/challenge/{os.getenv('HOSTNAME')}") as target:
     info( target.readrepeat(1) )
     target.send( asm(assembly) )
     info( target.readrepeat(1) )
-        
+       
         level1-solution2
 asm -c amd64 "mov rdi, 0x1337" | /challenge/embryoasm_level1
+        flag level1
+pwn.college{MNXbbM_4BHriQbN4jDCAjPWx3IT.QX0kTMsADOzQzW}
+
+
+        level2-solution1 
+change the assembly part of the level1-solution1
+        level2-solution2
+asm -c amd64 "add rdi, 0x331337" | /challenge/embryoasm_level2       
+        flag level2
+flag= pwn.college{YXKND95czj9WomYOQxpMBmIn8kp.QX1kTMsADOzQzW}
+        
+        
+        level3-soln1
+from pwn import *
+
+# set some context
+context.arch = "amd64"
+context.encoding = "latin"
+# ignore warnings
+warnings.simplefilter("ignore")
+
+# assembly goes here, most of the rest is boilerplate
+assembly = """
+mov rax, rdi
+// multiply will put the overflow into rdx,
+// so save it
+mov rcx, rdx
+mul rsi
+add rax, rcx
+"""
+
+# the hostname will always be the same as challenge binary
+with process(f"/challenge/{os.getenv('HOSTNAME')}") as target:
+    info( target.readrepeat(1) )
+    target.send( asm(assembly) )
+    info( target.readrepeat(1) )
+    
+        level3-soln2
+asm -c amd64 "mov rax, rdi
+mov rcx, rdx
+mul rsi
+add rax, rcx" | /challenge/embryoasm_level3
+
+flag=pwn.college{AV6hMHToKl8suDvzJC_LitVap33.QX2kTMsADOzQzW}
+
+        level4-soln1
+similar to level1 just change the assembly part to the below
+        level4-soln2
+asm -c amd64 "mov rax, rdi
+div rsi" | /challenge/embryoasm_leve4
+
+flag=pwn.college{c2hLYqoC-y4lzdLnIwWmX1TgxiR.QX3kTMsADOzQzW}
+
+        level5-soln1
+similar to level1 just change the assembly part to the below
+        level5-soln2
+asm -c amd64 "mov rax, rdi
+div rsi                               
+mov rax, rdx" | /challenge/embryoasm_level5
+
+flag=pwn.college{gNaNQWgLQa0Kkte_G22woxwk8fv.QX4kTMsADOzQzW}
+
+        level6-soln1
+
+      
