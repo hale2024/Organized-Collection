@@ -1,3 +1,5 @@
+ References:https://m.freebuf.com/articles/database/321326.html
+        -
         level1-solution1
 //First type ipython and type the below code. 
 
@@ -168,12 +170,26 @@ push rax" | /challenge/embryoasm_level16
 flag=pwn.college{UrhZADFwCRLG-ifRG9YHFci5Mle.QX5AjMsADOzQzW}
 
         level 17
-jumped didn't understand how to do
+//.rept :- u first specify how many times you want it to repeat then what you want it to repeat
+//.endr :- end
+asm -c amd64 "jmp next
+        .rept 0x51
+                nop
+        .endr
+next:
+        mov rdi,[rsp]
+        mov r12,0x403000
+        jmp r12" | /challenge/embryoasm_level17
+
+flag=pwn.college{ck7Jd9JAEKCTUvFdrRwkz7Ve0tt.QXwEjMsADOzQzW}
 
         level 18
+
+better solution=https://m.freebuf.com/articles/database/321326.html
 // x = rdi, y = rax
 // if [x] is 0x7f454c46 ....
-// dword ptr :- converts it into a 32 bit:http://www.c-jump.com/CIS77/ASM/Instructions/I77_0250_ptr_pointer.htm
+// dword ptr :- converts it into a 32 bit:
+        //http://www.c-jump.com/CIS77/ASM/Instructions/I77_0250_ptr_pointer.htm
 
 asm -c amd64 "cmp dword ptr [rdi], 0x7f454c46
 jne else_if
@@ -202,5 +218,58 @@ exit:
 flag=pwn.college{wRDz_COxY1zBd7c0ksykHM18DDN.QXxEjMsADOzQzW}
 
         level 19
- 
 
+//if rdi is greater tha 3, whatever the value of rdi is you move to a single address [rsi+32]
+
+asm -c amd64 "cmp rdi, 3
+jg default
+// rax = rdi * 8
+mov rax, rdi
+mov rbx, 8
+mul rbx
+// rax = rsi + rdi * 8
+add rax, rsi
+jmp [rax]
+default:
+    jmp [rsi+32]" | /challenge/embryoasm_level19
+
+flag=pwn.college{4wJ-6rFUlRotvSDGkYGg95jC4qL.QXyEjMsADOzQzW}
+    
+        level 20
+ 
+//i=rbx
+//n=rsi
+//sum=rax
+asm -c amd64 "xor rax, rax
+xor rbx, rbx
+
+for:
+    cmp rbx, rsi
+    jge finish
+    add rax, [rdi]
+    add rdi, 8
+    inc rbx
+    jmp for
+ finish:
+    div rsi" | /challenge/embryoasm_level20
+ 
+ flag=pwn.college{kg6d4hGNMtMEtKGxmTtxqGZHDY7.QXzEjMsADOzQzW}
+ 
+         level 21
+//decided to jump this one because it is a while loop
+ asm -c amd64 "cmp rdi, 0
+je rdi_zero
+jmp count
+count:
+    mov rsi, [rdi]
+    cmp rsi, 0
+    je end
+    inc rax
+    inc rdi
+    jmp count
+rdi_zero:
+    xor rax, rax
+end:
+    nop" | /challenge/embryoasm_level21
+
+flag=pwn.college{4wJ-6rFUlRotvSDGkYGg95jC4qL.QXyEjMsADOzQzW}
