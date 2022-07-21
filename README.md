@@ -14,3 +14,7 @@ To start solving the challenges:
             2nd you need to choose a challenge and press the start button.
   
             3rd touch the workspace button to access the terminal
+
+
+
+Note: each user has a different flag
