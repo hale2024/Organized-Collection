@@ -254,20 +254,24 @@ for:
  flag=pwn.college{kg6d4hGNMtMEtKGxmTtxqGZHDY7.QXzEjMsADOzQzW}
  
          level 21
-//decided to jump this one because it is a while loop
- asm -c amd64 "cmp rdi, 0
-je rdi_zero
-jmp count
-count:
-    mov rsi, [rdi]
-    cmp rsi, 0
-    je end
+    
+asm -c amd64 "cmp rdi, 0
+je endf
+
+while:
+    mov r10, [rdi]
+    cmp r10, 0
+    je endf
     inc rax
     inc rdi
-    jmp count
-rdi_zero:
-    xor rax, rax
-end:
+    jmp while
+    
+endf:
     nop" | /challenge/embryoasm_level21
 
 flag=pwn.college{4wJ-6rFUlRotvSDGkYGg95jC4qL.QXyEjMsADOzQzW}
+
+           level 22
+flocka17@gmail.com
+
+
